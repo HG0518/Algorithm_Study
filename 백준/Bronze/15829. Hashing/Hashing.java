@@ -5,19 +5,23 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         int strLen = Integer.parseInt(sc.nextLine().trim());
         String str = sc.nextLine().trim();
-        double[] strToInt = new double[str.length()];
-        for (int i = 0; i < str.length(); i++)
+        int[] strToInt = new int[strLen];
+        for (int i = 0; i < strToInt.length; i++)
             strToInt[i] = str.charAt(i) - 'a' + 1;
 
-        int result = (int) hashing(strToInt);
+        long result = hashing(strToInt);
         System.out.println(result);
     }
 
-    static double hashing(double[] list) {
-        double sum = 0;
+    static long hashing(int[] list) {
+        long sum = 0;
+        long pow=1;
+        long mod=1234567891;
+
         for (int i = 0; i < list.length; i++) {
-            sum += list[i] * Math.pow(31, i);
+            sum=(sum+list[i]*pow)%mod;
+            pow=(pow*31)%mod;
         }
-        return sum % 1234567891;
+        return sum;
     }
 }
