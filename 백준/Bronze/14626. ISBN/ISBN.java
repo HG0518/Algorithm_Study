@@ -34,9 +34,8 @@ public class Main {
             sum+=stoi[i]*mul;
         }
 
-        int result=10-sum%10;
-        if(result==10) result=0;
-        else {
+        int result=(10-sum%10)%10;
+
             while (true) {
                 if (result % resultMul != 0) result += 10;
                 else {
@@ -44,7 +43,7 @@ public class Main {
                     break;
                 }
             }
-        }
+
 
         System.out.println(result);
 
