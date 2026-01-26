@@ -8,15 +8,24 @@ class Solution {
         if(r==0) return 0;
         if(n==0) return 1;
 
-        long blockLen=(long)Math.pow(5,n-1);
-        long preOneNum=(long)Math.pow(4,n-1);
-        int blockNum=(int)(r/blockLen);
-        long mod=r%blockLen;
-        
         long oneNum=0;
-        if(blockNum<2) oneNum=preOneNum*blockNum+cal_one(n-1,mod);
-        else if(blockNum==2) oneNum=preOneNum*blockNum;
-        else oneNum=preOneNum*(blockNum-1)+cal_one(n-1,mod);
+        
+        for(int i=n;i>0;i--){
+            
+            long blockLen=(long)Math.pow(5,i-1);
+            long preOneNum=(long)Math.pow(4,i-1);
+            int blockNum=(int)(r/blockLen);
+            long mod=r%blockLen;
+
+            if(blockNum<2) oneNum+=preOneNum*blockNum;
+            else if(blockNum==2) {
+                oneNum+=preOneNum*blockNum;
+                break;
+            }
+            else oneNum+=preOneNum*(blockNum-1);
+            
+            r=mod;
+        }
         
         return oneNum;
     }
