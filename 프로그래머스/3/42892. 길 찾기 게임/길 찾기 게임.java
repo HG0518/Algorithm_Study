@@ -1,49 +1,42 @@
 import java.util.*;
 
 class Solution {
+    int idx;
     public int[][] solution(int[][] nodeinfo) {
-        int[][] arr=new int[nodeinfo.length][3];
-        int[][] answer = new int[2][nodeinfo.length];
-        int[] index={0};
-        
-        for(int i=0;i<nodeinfo.length;i++){
-            arr[i][0]=nodeinfo[i][0];
-            arr[i][1]=nodeinfo[i][1];
-            arr[i][2]=i+1;
+        int n=nodeinfo.length;
+        List<TreeNode> nodes=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            nodes.add(new TreeNode(nodeinfo[i][0],nodeinfo[i][1],i+1));
         }
         
-        Arrays.sort(arr,(o1,o2)->Integer.compare(o2[1],o1[1]));
+        nodes.sort((a,b)->b.y!=a.y?b.y-a.y:a.x-b.x);
         
-        TreeNode root=null;
-        for(int i=0;i<arr.length;i++){
-            root=makeTree(root,arr[i][0],arr[i][1],arr[i][2]);
+        TreeNode root=nodes.get(0);
+        for(int i=1;i<n;i++){
+            root.insertNode(nodes.get(i));
         }
         
-        preOrder(root,answer,index);
-        index[0]=0;
-        postOrder(root,answer,index);
+        int[][] answer = new int[2][n];
+        idx=0;
+        preOrder(root,answer);
+        idx=0;
+        postOrder(root,answer);
         
         return answer;
     }
     
-    public TreeNode makeTree(TreeNode root, int x, int y, int index){
-        if(root==null) return new TreeNode(x,y,index);
-        if(root.x>x) root.left=makeTree(root.left,x,y,index);
-        else root.right=makeTree(root.right,x,y,index);
-        return root;
+    public void preOrder(TreeNode root, int[][] answer){
+        if(root==null)return;
+        answer[0][idx++]=root.index;
+        preOrder(root.left,answer);
+        preOrder(root.right,answer);
     }
     
-    public void preOrder(TreeNode root, int[][] answer, int[] index){
+    public void postOrder(TreeNode root, int[][] answer){
         if(root==null)return;
-        answer[0][index[0]++]=root.index;
-        preOrder(root.left,answer,index);
-        preOrder(root.right,answer,index);
-    }
-    public void postOrder(TreeNode root, int[][] answer, int[] index){
-        if(root==null)return;
-        postOrder(root.left,answer,index);
-        postOrder(root.right,answer,index);
-        answer[1][index[0]++]=root.index;
+        postOrder(root.left,answer);
+        postOrder(root.right,answer);
+        answer[1][idx++]=root.index;
     }
 }
 
@@ -58,5 +51,15 @@ class TreeNode{
         this.x=x;
         this.y=y;
         this.index=index;
+    }
+    
+    public void insertNode(TreeNode node){
+        if(this.x>node.x){
+            if(this.left==null) this.left=node;
+            else this.left.insertNode(node);
+        }
+        else
+            if(this.right==null) this.right=node;
+            else this.right.insertNode(node);
     }
 }
