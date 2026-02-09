@@ -1,22 +1,20 @@
 import java.util.*;
 
 class Solution {
-    int count;
     public int solution(int n) {
-        count=0;
-        int sum=0;
-        int i=0;
-        getCount(sum,i,n*2);
-        return count;
+        int[][] visited=new int[n+1][n*2];
+        for(int[] tmp:visited){
+            Arrays.fill(tmp,-1);  
+        }
+        
+        return getCount(0,0,n*2,visited);
     }
     
-    public void getCount(int sum, int i, int n){
-        if(sum<0 || sum>n/2) return;
-        if(i==n){
-            if(sum==0)count++;
-            return;
-        }
-        getCount(sum+1,i+1,n);
-        getCount(sum-1,i+1,n);
+    public int getCount(int sum, int i, int n, int[][] visited){
+        if(sum<0 || sum>n/2) return 0;
+        if(i==n) return sum==0?1:0;
+        if(visited[sum][i]!=-1) return visited[sum][i];
+        visited[sum][i]=getCount(sum+1,i+1,n,visited)+getCount(sum-1,i+1,n,visited);
+        return visited[sum][i];
     }
 }
